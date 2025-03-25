@@ -8,7 +8,7 @@ let arrayTweets = JSON.parse(localStorage.getItem("arrayTweets")) || []
 let editando = false
 
 document.addEventListener("DOMContentLoaded",function(){
-    console.log("esto es array tweets en el documento cargado", arrayTweets)
+    //console.log("esto es array tweets en el documento cargado", arrayTweets)
     mostrarTweetsHtml()
 })
 
@@ -24,27 +24,23 @@ function agregarValorAlObjeto(e){
 function validarCampos(e){
     e.preventDefault()
     if(tweet.value.trim() == ""){
-        console.log("el tweet no puede ir vacio")
+        mostraraAlerta("el tweet no puede ir vacio")
         return;
     }
 
     if(editando){
-        console.log("esto es tweet.value",tweet.value)
-        //objetoTweet.mensaje = tweet.value
        editarTweet({...objetoTweet})
-       console.log("esto es el objetoTweet en if editando",objetoTweet)
+      // console.log("esto es el objetoTweet en if editando",objetoTweet)
        editando = false
     }else{
        // objetoTweet.mensaje = tweet.value
         arrayTweets = [...arrayTweets,{...objetoTweet}]
         localStorage.setItem("arrayTweets", JSON.stringify(arrayTweets))
     }
-      console.log("esto es array tweets debajo del else",arrayTweets)
       objetoTweet.id = Date.now().toString(12)
       mostrarTweetsHtml()
       formulario.reset()
       resetearObjeto()
-      console.log("esto es objeto tweet debajo de resetearObjeto",objetoTweet)
 }
 
 function conseguirTweet(id){
@@ -59,14 +55,11 @@ function ponerValoresAlosInputsYalObjeto(objeto){
       id:objeto.id,
       mensaje:objeto.tweet
    })
-   console.log("esto es objetoTweet en ponerValoresAlosInputsYalObjeto",objetoTweet)
+   //console.log("esto es objetoTweet en ponerValoresAlosInputsYalObjeto",objetoTweet)
 }
 
 function editarTweet(objeto){
-    console.log("esto es arrayTweets en editarTweet",arrayTweets)
     arrayTweets = arrayTweets.map(t => t.id == objeto.id ? objeto : t)
-    console.log("esto es el objeto =>", objeto)
-    console.log("esto es arrayTweets en el map", arrayTweets)
     localStorage.setItem("arrayTweets",JSON.stringify(arrayTweets))
 }
 
@@ -120,6 +113,25 @@ function resetearObjeto(){
 function limpiarHtml(){
     while(listaTweets.firstChild){
         listaTweets.removeChild(listaTweets.firstChild)
+    }
+}
+function mostraraAlerta(error){
+    limpiarAlerta()
+    const mensajeEerror = document.createElement('p');
+    mensajeEerror.textContent = error;
+    mensajeEerror.classList.add('error'); 
+
+    formulario.appendChild(mensajeEerror)
+
+    setTimeout(() => {
+       mensajeEerror.remove()
+    },3000);
+}
+
+function limpiarAlerta(){
+    const existe = document.querySelector(".error")
+    if(existe){
+        existe.remove()
     }
 }
 /* const mensajeEerror = document.createElement('p');
